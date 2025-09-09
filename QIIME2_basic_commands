@@ -18,3 +18,6 @@ cat *nome file*
 
 #Vedere cosa succede in un processo, aggiungere il seguente comando alla fine
 --verbose
+
+#Convertire csv in tsv (controllare se il csv è separato da virgola o da puntoevirgola
+sed 's/;/\t/g' manifest.csv > manifest.tsv
