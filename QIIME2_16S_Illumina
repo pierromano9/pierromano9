@@ -57,9 +57,14 @@ qiime empress tree-plot \
 
 #Diversity
 qiime diversity core-metrics-phylogenetic \
-    --i-table table-filtered-test.qza \
-    --i-phylogeny tree/rooted_tree.qza \
-    --p-sampling-depth 10000 \
-    --m-metadata-file metadata.tsv \
-    --output-dir diversity
-(da capire quel p-sampling-depth)
+  --i-phylogeny ./mafft-fasttree-output/rooted_tree.qza \
+  --i-table table-filtered-test.qza \
+  --p-sampling-depth 10923 \
+  --m-metadata-file metadata.tsv \
+  --output-dir core-metrics-results
+(per il p-sampling-depth andare a controllare e-value di table-filtered-test.qza = ossia la frequenza minore tra tutte)
+
+#alpha-diversity
+qiime diversity alpha-group-significance --i-alpha-diversity core-metrics-results/shannon_vector.qza --m-metadata-file metadata.tsv --o-visualization alpha
+-diversity-shannon_significances.qzv
+(cambiare shannon_vector.qza se si vuole usare un altro vector, e cambiare anche il nome dell'output)
