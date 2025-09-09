@@ -1,0 +1,65 @@
+#Attiva conda environment
+conda activate qiime2-amplicon-2024.10
+
+#Importare i dati
+#File manifest con: prima colonna "id" = codice univoco per campione; seconda colonna "forward-absolute-filepath" = percorso per file sequenze campione in forward (R1); terza colonna "reverse-absolute-filepath" = percorso per file sequenze campione in reverse (R2)
+qiime tools import   --type 'SampleData[PairedEndSequencesWithQuality]'   --input-path manifest.tsv   --output-path paired-end-demux.qza   --input-format PairedEndFastqManifestPhred33V2
+
+#Per visualizzare i risultati dell'import
+qiime demux summarize   --i-data paired-end-demux.qza   --o-visualization paired-end-demux.qzv
+(visualizzando i risultati in QIIME2 View e cliccando su Interactive Quality Plot, possiamo andare a stimare a che lunghezza andremo a eliminare le reads che stanno sotto la soglia di punteggio di 20)
+
+#Per la fase di DENOISING (filter and trim reads, find the most likely set of ASVs or OTUs, remove chimeras)
+qiime dada2 denoise-paired   --i-demultiplexed-seqs paired-end-demux.qza   --p-trim-left-f 17   --p-trim-left-r 21   --p-trunc-len-f 280   --p-trunc-len-r 220   --p-n-threads 2   
+--o-table table.qza   --o-representative-sequences rep-seqs.qza   --o-denoising-stats denoising-stats.qza   --verbose
+(sostituire i tuoi dati e i tuoi risultati dentro lo script precedente)
+
+#Se vuoi raccogliere gli output in un'unica cartella
+qiime dada2 denoise-single \
+    --i-demultiplexed-seqs sequences.qza \
+    --p-trunc-len 140 \
+    --p-n-threads 2 \
+    --output-dir dada2 --verbose
+(DA TESTARE)
+
+#Per visualizzare i risultati ottenuti
+qiime metadata tabulate   --m-input-file denoising-stats-test.qza   --o-visualization denoising-stats-test.qzv
+qiime feature-table summarize   --i-table table-test.qza   --o-visualization table-test.qzv
+qiime feature-table tabulate-seqs   --i-data rep-seqs-test.qza   --o-visualization rep-seqs-test.qzv
+
+#Per aggiungere la taxonomy (necessità di scaricare un classifier, SILVA per i batteri)
+qiime feature-classifier classify-sklearn   --i-classifier classifier_Silva_138.1-99_IonTorrent_qiime2024.10_16S.qza   --i-reads rep-seqs-test.qza   --o-classification taxonomy-test.qza
+
+#Per visualizzare la tassonomia
+qiime metadata tabulate   --m-input-file taxonomy-test.qza   --o-visualization taxonomy-test.qzv
+
+#Per filtrare escludendo mitochondria e chloroplast
+qiime taxa filter-table   --i-table table-test.qza   --i-taxonomy taxonomy-test.qza   --p-exclude mitochondria,chloroplast   --o-filtered-table table-filtered-test.qza
+
+#Per visualizzare la tassonomia filtrata
+qiime feature-table summarize   --i-table table-filtered-test.qza   --o-visualization table-filtered-test.qzv
+
+#Per i boxplot
+qiime taxa barplot   --i-table table-filtered-test.qza   --i-taxonomy taxonomy-test.qza   --o-visualization taxa-bar-plots-filtered-test.qzv
+qiime taxa barplot   --i-table table-test.qza   --i-taxonomy taxonomy-test.qza   --o-visualization taxa-bar-plots-test.qzv
+
+#Creare phylogenetic tree
+qiime phylogeny align-to-tree-mafft-fasttree     --i-sequences rep-seqs-test.qza     --output-dir tree
+(#per esportare come .nwk, visualizzabile in https://itol.embl.de
+  qiime tools export \
+  --input-path tree/rooted_tree.qza \
+  --output-path exported-tree/)
+
+#Visualizzare con empress == bisogna prima installare empress
+qiime empress tree-plot \
+    --i-tree tree/rooted_tree.qza \
+    --o-visualization tree/empress.qzv
+
+#Diversity
+qiime diversity core-metrics-phylogenetic \
+    --i-table table-filtered-test.qza \
+    --i-phylogeny tree/rooted_tree.qza \
+    --p-sampling-depth 10000 \
+    --m-metadata-file metadata.tsv \
+    --output-dir diversity
+(da capire quel p-sampling-depth)
