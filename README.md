@@ -1,4 +1,4 @@
-- 👋 Hi, I’m @pierromano9
+- 👋 Hi, I’m Piergiorgio Romano, PhD student in Biological and Environmental Sciences and Technologies (University of Salento)
 - 👀 I’m interested in Viticolture and Oenology
 - 🌱 I’m currently learning Genomic Selection in grapevine
 
