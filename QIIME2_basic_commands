@@ -1,0 +1,20 @@
+#Vai nella tua home
+cd ~
+
+#Crea una cartella
+mkdir *nome cartella*
+
+#Spostarsi di directory
+ls *nome*
+
+#Vedi tutti i plugin
+qiime --help
+
+#Rimuovere file
+rm *nome file*
+
+#Controllo contenuto file
+cat *nome file*
+
+#Vedere cosa succede in un processo, aggiungere il seguente comando alla fine
+--verbose
