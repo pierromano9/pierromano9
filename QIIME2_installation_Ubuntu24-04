@@ -1,0 +1,31 @@
+##Install QIIME2 on your Linux distribution (Ubuntu 24.04)##
+
+Installing miniconda (verify the python version, with --version, and download the correct, i.e. Miniconda3-py312_25.7.0-2-Linux-x86_64.sh)
+
+#Check that all packages are up to date
+sudo apt update
+
+#Upgrade Ubuntu
+sudo apt upgrade
+
+Copy the .sh file in Ubuntu folder and launch with bash command
+
+After the installation, close and reopen Ubuntu
+
+If all works, you can see <base> before your name
+
+#Check if conda is installed
+conda list
+
+#Update the conda environment
+conda update conda
+
+#Install wget package
+conda install wget
+
+#Install QIIME2 (amplicon distribution)
+conda env create -n qiime2-amplicon-2024.10 --file https://data.qiime2.org/distro/amplicon/qiime2-amplicon-2024.10-py310-linux-conda.yml
+(There are others qiime2 distribution to do other things like metagenome, pathogenome, tiny distribution)
+
+Now everytime you launch ubuntu you need to activate qiime2 with:
+conda activate qiime2-amplicon-2024.10
