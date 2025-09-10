@@ -8,6 +8,9 @@ qiime tools import   --type 'SampleData[PairedEndSequencesWithQuality]'   --inpu
 #Per visualizzare i risultati dell'import
 qiime demux summarize   --i-data paired-end-demux.qza   --o-visualization paired-end-demux.qzv
 (visualizzando i risultati in QIIME2 View e cliccando su Interactive Quality Plot, possiamo andare a stimare a che lunghezza andremo a eliminare le reads che stanno sotto la soglia di punteggio di 20)
+(#per lavorare su un subset
+    qiime demux subsample-paired   --i-sequences paired-end-demux.qza   --p-fraction 0.1   --o-subsampled-sequences paired-end-demux-subsampled.qza)
+
 
 #Per la fase di DENOISING (filter and trim reads, find the most likely set of ASVs or OTUs, remove chimeras)
 qiime dada2 denoise-paired   --i-demultiplexed-seqs paired-end-demux.qza   --p-trim-left-f 17   --p-trim-left-r 21   --p-trunc-len-f 280   --p-trunc-len-r 220   --p-n-threads 2   
