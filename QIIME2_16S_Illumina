@@ -68,3 +68,11 @@ qiime diversity core-metrics-phylogenetic \
 qiime diversity alpha-group-significance --i-alpha-diversity core-metrics-results/shannon_vector.qza --m-metadata-file metadata.tsv --o-visualization alpha
 -diversity-shannon_significances.qzv
 (cambiare shannon_vector.qza se si vuole usare un altro vector, e cambiare anche il nome dell'output)
+
+#beta-diversity
+qiime diversity beta-group-significance --i-distance-matrix ./core-metrics-results/unweighted_unifrac_distance_matrix.qza --m-metadata-file metadata.tsv --m-metadata-column source --o-visualization unifrac_distances_significanc
+es.qzv --p-permutations 999 --p-pairwise
+(permutations di default 999, meglio 9999)
+
+#emperor plot
+qiime emperor plot --i-pcoa ./core-metrics-results/unweighted_unifrac_pcoa_results.qza --m-metadata-file metadata.tsv --p-custom-axes --o-visualization emperor_metadata.qzv
