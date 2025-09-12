@@ -46,6 +46,12 @@ qiime feature-table summarize   --i-table table-filtered-test.qza   --o-visualiz
 qiime taxa barplot   --i-table table-filtered-test.qza   --i-taxonomy taxonomy-test.qza   --o-visualization taxa-bar-plots-filtered-test.qzv
 qiime taxa barplot   --i-table table-test.qza   --i-taxonomy taxonomy-test.qza   --o-visualization taxa-bar-plots-test.qzv
 
+#Per esportare tutti i taxonomy levels come file .csv, in una cartella exported-barplots
+qiime tools export \
+  --input-path taxa-bar-plots.qzv \
+  --output-path exported-barplots
+
+
 #Creare phylogenetic tree
 qiime phylogeny align-to-tree-mafft-fasttree     --i-sequences rep-seqs-test.qza     --output-dir tree
 (#per esportare come .nwk, visualizzabile in https://itol.embl.de
